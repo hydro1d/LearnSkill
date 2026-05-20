@@ -1,0 +1,124 @@
+[
+  {
+    "id": 1,
+    "title": "Complete Web Development Bootcamp",
+    "instructor": "Dr. Angela Yu",
+    "duration": "45 hours",
+    "rating": 4.9,
+    "level": "Beginner",
+    "description": "Become a full-stack developer. Master HTML, CSS, JavaScript, React, Node.js, and build a portfolio of 15+ real-world web applications.",
+    "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&auto=format&fit=crop&q=80",
+    "category": "Development",
+    "curriculum": [
+      "Introduction to Web Development & HTML5",
+      "Styling with CSS3, Flexbox, and Grid Systems",
+      "JavaScript Basics & Document Object Model (DOM)",
+      "Modern Front-End Frameworks: In-depth React",
+      "Back-End Foundations: Node.js, Express, and RESTful APIs",
+      "Database Design & Integration (MongoDB & SQL)",
+      "Deployment, Security, and Final Capstone Project"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "UI/UX Masterclass: Design Premium Interfaces",
+    "instructor": "Sarah Connor",
+    "duration": "28 hours",
+    "rating": 4.8,
+    "level": "Intermediate",
+    "description": "Learn modern user interface and user experience design principles. Master Figma, wireframing, high-fidelity design, and user psychology.",
+    "image": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&auto=format&fit=crop&q=80",
+    "category": "Design",
+    "curriculum": [
+      "Introduction to User Experience (UX) Psychology",
+      "Figma Fundamentals & Vector Tools Mastery",
+      "Wireframing, Information Architecture & User Flows",
+      "Typography, Grid Systems, and Modern Color Theory",
+      "Creating Responsive Designs for Mobile, Tablet, and Desktop",
+      "Interactive Prototyping & Micro-animations",
+      "Designing and Presenting a Premium Case Study"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Digital Marketing Elite Blueprint",
+    "instructor": "Robert Kiyosaki",
+    "duration": "18 hours",
+    "rating": 4.6,
+    "level": "Beginner",
+    "description": "Master SEO, Google Ads, social media advertising, and content copywriting to drive organic traffic and convert prospects into loyal customers.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80",
+    "category": "Marketing",
+    "curriculum": [
+      "Understanding the Modern Digital Marketing Funnel",
+      "Search Engine Optimization (SEO) Masterclass",
+      "Pay-Per-Click Advertising (PPC): High-ROI Google Ads",
+      "Social Media Marketing: Meta, LinkedIn, and TikTok Campaigns",
+      "Copywriting Secrets for High-Converting Landing Pages",
+      "Email Marketing & Advanced Automation Sequences",
+      "Web Analytics, KPIs, and Conversion Rate Optimization (CRO)"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Advanced React & Next.js Patterns",
+    "instructor": "Jane Smith",
+    "duration": "32 hours",
+    "rating": 4.9,
+    "level": "Advanced",
+    "description": "Level up your React and Next.js skills. Dive into Server Components, Server Actions, performance optimization, and scalable state patterns.",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=80",
+    "category": "Development",
+    "curriculum": [
+      "React Deep Dive: Virtual DOM, Fiber Architecture & Custom Hooks",
+      "Next.js App Router Architecture: Client vs. Server Components",
+      "Data Fetching, Caching, and Incremental Static Regeneration (ISR)",
+      "State Management Scales: Redux Toolkit, Zustand, and Context",
+      "Implementing Server Actions and Form Handling",
+      "Web Performance Audits: Core Web Vitals Optimization",
+      "Deploying and Scaling Next.js Apps on Vercel"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Brand Identity Design & Strategy",
+    "instructor": "Michael Scott",
+    "duration": "22 hours",
+    "rating": 4.7,
+    "level": "Intermediate",
+    "description": "Discover how to build memorable brand strategies. Create cohesive visual identity systems, logos, typography systems, and brand guidelines.",
+    "image": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&auto=format&fit=crop&q=80",
+    "category": "Design",
+    "curriculum": [
+      "The Foundation of Strategic Brand Positioning",
+      "Creative Briefing & Conducting Brand Research",
+      "Logo Design Concepting: Sketching to Vector Masterpieces",
+      "Developing Cohesive Brand Typographic Systems",
+      "Color Psychology and Creating Custom Brand Palettes",
+      "Designing Brand Touchpoints (Packaging, Business Cards, Stationery)",
+      "Authoring Professional and Comprehensive Brand Guideline Manuals"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Python for Data Science & AI",
+    "instructor": "Elon Mask",
+    "duration": "36 hours",
+    "rating": 4.8,
+    "level": "Beginner",
+    "description": "Learn python from scratch. Master core libraries like Pandas, NumPy, and Matplotlib. Build machine learning models with Scikit-Learn.",
+    "image": "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=800&auto=format&fit=crop&q=80",
+    "category": "Development",
+    "curriculum": [
+      "Python Basics: Variables, Loops, Functions, and OOP",
+      "Data Manipulation with NumPy & Vectorized Computations",
+      "Data Analysis & Wrangling using Pandas DataFrames",
+      "Stunning Visualizations: Matplotlib and Seaborn Libraries",
+      "Statistical Analysis & Hypothesis Testing with Python",
+      "Introduction to Machine Learning: Scikit-Learn Algorithms",
+      "Building a Predictive AI Model for Real-World Housing Data"
+    ]
+  }
+]
+
+
