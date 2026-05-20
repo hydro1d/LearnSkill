@@ -1,64 +1,137 @@
-# 🎓 SkillSphere - Elite E-Learning & Professional Skills Platform
+# 🎓 SkillSphere — Premium Online Learning & Skill Acquisition Platform
 
-SkillSphere is a cutting-edge, high-end online learning platform built for modern learners to explore courses, master industry-relevant skills, and advance their professional careers. The platform specializes in three core disciplines: **Development**, **Design**, and **Digital Marketing**.
+SkillSphere is a next-generation, high-fidelity LMS (Learning Management System) platform built with **Next.js 16 (App Router)** and **React 19**. It features a modern, warm, and natural light design system styled with **Tailwind CSS v4** and **DaisyUI v5**. 
 
----
-
-## 🔗 Project Links & Info
-
-- **Tech Stack**: Next.js 16 (App Router), Tailwind CSS v4, DaisyUI v5, BetterAuth Mock Engine, Framer Motion, and Lucide React.
-- **Design Inspiration**: Sleek dark modes with glassmorphic cards, vibrant gradients, and premium micro-animations (inspired by elite Dribbble interfaces).
+The platform connects to a **MongoDB** database via the official **BetterAuth MongoDB Adapter** for server-side session management, while incorporating an automatic client-side **fail-safe local-storage backup** for zero-friction preview testing.
 
 ---
 
-## 🌟 Key Features
-
-1. **🔒 Secure Protected Routes**: Crucial pages like the Course Details page require a logged-in session. Unauthenticated access displays a security lockout and redirects the user to the login gateway.
-2. **🔄 Interactive Back-Redirection**: If a logged-out user tries to access a protected course (e.g., `/courses/3`), they are redirected to login. Once successfully signed in, they are immediately redirected *straight back* to that specific course.
-3. **⚡ Reactive Mock BetterAuth Engine**: Exposes exact, compliant BetterAuth client APIs (`authClient.signIn.email`, `authClient.signUp.email`, `authClient.signIn.social` for Google, `authClient.updateUser`, and the reactive `useSession` hook) backed by `localStorage` so login state changes instantly sync across the navbar, profile page, and details view.
-4. **🔍 Instant Course Search & Filtering**: Learners can search the course catalog by course title in real-time, or filter courses by category (Development, Design, Marketing) with responsive item count badges.
-5. **🎨 Premium Profile Customization**: An active student dashboard presenting achievements and enrolled courses, with a dedicated update portal using the BetterAuth API (`authClient.updateUser({ name, image })`) featuring a live avatar photo preview!
-6. **🚀 science-backed Learning Tips**: Integrated learning card blocks illustrating the Pomodoro technique, Spaced Repetition, and the Feynman technique to maximize study efficiency.
-7. **⏱️ Async Skeleton Loader**: Simulates realistic asynchronous database API calls upon entering the Courses page to display premium, animated skeleton screens.
-8. **🧭 Custom 404 Route**: A beautifully tailored Not Found fallback incorporating spinning navigational guides and redirection CTAs.
-9. **📱 100% Fully Responsive Layout**: Perfect visual adapting from small mobile viewports (collapsible drawer-style navbar) to widescreen 4K displays.
+## 🎨 Design & Aesthetic System
+The user interface has been customized with premium visual aesthetics tailored for a warm, natural, and engaging study environment:
+*   **Warm Palette**: Accents of rich orange (`#ea580c`) and warm amber (`#f97316`) against a clean off-white canvas (`#fcfaf6`).
+*   **Typography**: Clean font pairings featuring **Outfit** and **Inter** for exceptional readability.
+*   **Premium Glassmorphism**: Cards and panels styled with `glass-panel` backdrops (fine-tuned white translucent borders, soft orange reflections, and back-blur).
+*   **Micro-Animations**: Layout transitions, hover lift-ups, and interactive scaling driven by **Framer Motion**.
+*   **Custom Scrollbars**: Modern, thin scroll tracks blending with the natural tone of the platform.
 
 ---
 
-## 📦 Installed NPM Packages
+## ⚡ Tech Stack & Libraries
 
-The following packages are installed to provide full feature compliance and premium micro-animations:
-
-| Package Name | Purpose |
-| :--- | :--- |
-| **`better-auth`** | Exposes schemas and APIs for user and account state management. |
-| **`daisyui`** *(v5+)* | Provides premium Tailwind CSS UI design components. |
-| **`framer-motion`** *(Motion)* | Drives top-grade entrance animations, layout transitions, and interactive scale effects. |
-| **`lucide-react`** | Implements clean, modern SVG vector outline iconography. |
-| **`react-hot-toast`** | Manages gorgeous, customizable status/error pop-up toast alerts. |
+| Dependency | Version | Purpose / Feature |
+| :--- | :--- | :--- |
+| **Next.js** | `16.2.6` | App Router, Dynamic Route Handling, Optimization |
+| **React** | `19.2.4` | Modern UI rendering and concurrent hook support |
+| **BetterAuth** | `^1.6.11` | Client-Server Auth engine with OAuth & Credential support |
+| **DaisyUI** | `^5.5.20` | Clean, Tailwind-native component primitives |
+| **Tailwind CSS** | `^4.0.0` | Global styling engine with PostCSS support |
+| **MongoDB** | `^7.1.0` | Database connection client for user persistence |
+| **Framer Motion** | `^12.39.0` | Micro-interactions and smooth page transitions |
+| **Lucide React** | `^1.16.0` | Clean outline SVG icons |
+| **React Hot Toast** | `^2.6.0` | Smooth popup notification alerts |
 
 ---
 
-## 🛠️ Environment Variables Configuration
+## 🏗️ Hybrid Authentication Architecture
 
-To run this platform securely and successfully in a production or hosting environment, secure your configuration variables by duplicating the sample structure:
+SkillSphere features a robust, hybrid client-server auth architecture that ensures the application remains fully functional regardless of the environment setup:
 
-Create a `.env.local` file at the root of the workspace:
+```mermaid
+graph TD
+    A[Client authClient Call] --> B{Check Auth Source}
+    B -- /api/auth/get-session succeeds --> C[MongoDB Mode]
+    B -- /api/auth/get-session fails/times out --> D[Mock LocalStorage Mode]
+    C --> E[Reads/Writes to MongoDB via better-auth]
+    D --> F[Reads/Writes to localStorage Registry]
+```
 
+1.  **MongoDB Server Mode**:
+    When configured with a valid `MONGODB_URI`, the server-side API endpoints in `/api/auth/[...route]` spin up a BetterAuth instance connected via the `@better-auth/mongo-adapter` to persist accounts, users, and sessions directly in your database.
+2.  **Client-Side Fail-safe Mock Mode**:
+    If the database server is not configured, or if the API gateway encounters a connection error, the client-side `authClient` automatically falls back to a mock auth engine backed by `localStorage` (with a simulated 200-500ms API latency). This guarantees that preview, testing, and Vercel branch deployments remain fully browseable and functional.
+
+---
+
+## 🌟 Core Features & Modules
+
+### 1. 🔍 Catalog Search & Advanced Filtering
+*   **Real-time Matching**: Filter the entire course catalog by typing titles in the search bar.
+*   **Category Tabs**: Segment courses by *Development*, *Design*, or *Marketing*.
+*   **Interactive Badges**: Category pill-tabs feature reactive indicators counting current matching catalog items.
+*   **Skeleton Loading State**: Realistic database retrieval simulations using animated, pulse-effect loading skeletons.
+
+### 2. 🔒 Session-Aware Route Protection & Redirection
+*   **Security Lockout**: Accessing detail routes (e.g. `/courses/[id]`) requires an active authenticated session. Unauthenticated guests are blocked and redirected to the login gateway.
+*   **Referer Redirect Loop**: Redirections append a URL query state (e.g. `/login?redirectTo=/courses/3`). Once the user successfully registers or logs in, they are immediately navigated straight back to their chosen path.
+
+### 3. 🏆 Personal Student Portfolio (Profile)
+*   **Course Progress Tracking**: View enrolled courses accompanied by visual progress bar percentages.
+*   **Gamified Achievements**: Earn status badges (such as the *Beta Pioneer Badge*) and personalized study insights.
+*   **Profile Editor**: Customize account name and update avatar pictures using the client API `authClient.updateUser` with an instant-update live avatar preview.
+
+### 4. 🧠 Science-Backed Learning Systems
+*   **Pomodoro Technique**: Focus counters suggesting 25-minute intervals.
+*   **Active Recall & Spaced Repetition**: Techniques to review concepts over 1-day, 3-day, and weekly loops.
+*   **The Feynman Technique**: Insights prompting simplified explanations to lock in mastery.
+
+---
+
+## 📂 Project Structure
+
+```text
+skillsphere/
+├── public/                  # Static assets and icons
+├── src/
+│   ├── app/                 # Next.js App Router (Layouts, pages, API routes)
+│   │   ├── api/             # API routes including BetterAuth route catches
+│   │   ├── courses/         # Course catalog and course detail page routes
+│   │   ├── login/           # Authentication Login forms
+│   │   ├── profile/         # User profile views and update settings
+│   │   ├── register/        # Account registration views
+│   │   ├── globals.css      # Core theme configuration, fonts & glassmorphism
+│   │   ├── layout.js        # Global layout configuration
+│   │   └── providers.js     # Global context providers (React Hot Toast)
+│   ├── components/          # Reusable components (Navbar, Footer)
+│   ├── data/                # Mock courses catalog JSON data source
+│   └── lib/                 # Core server-side and client-side auth helpers
+│       ├── auth-client.js          # Client-side auth Client with Mock fallback
+│       └── better-auth-server.js   # Server BetterAuth config with MongoDB Adapter
+├── .env.local.example       # Example variables for local database setup
+└── package.json             # Build configuration and script definitions
+```
+
+---
+
+## 🛠️ Environment Configuration
+
+To configure database-backed sessions and Google Social login, duplicate the example file:
+```bash
+cp .env.local.example .env.local
+```
+
+Inside your `.env.local` file, update the following keys:
 ```env
-# Next.js Application General URLs
+# App Routing URLs
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# BetterAuth Security Secrets (Mock & Future Production compatibility)
-BETTER_AUTH_SECRET=a_secure_random_64_character_hex_hash
 BETTER_AUTH_URL=http://localhost:3000
+
+# BetterAuth Security Secret (Should be a random 32-character string)
+BETTER_AUTH_SECRET=your_better_auth_secret_here
+
+# MongoDB Connection String & Target Database name
+MONGODB_URI=mongodb://127.0.0.1:27017
+MONGODB_DB=skillsphere
+
+# Google Social Login credentials (Optional)
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 ```
 
 ---
 
 ## 🚀 Getting Started Locally
 
-### 1. Clone the project and navigate to the folder
+### 1. Clone the project and navigate to the directory
 ```bash
 git clone <repository-url>
 cd skillsphere
@@ -69,13 +142,11 @@ cd skillsphere
 npm install
 ```
 
-### 3. Setup environment variables
-Create `.env.local` as described in the section above.
-
-### 4. Run the development server
+### 3. Spin up the development server
 ```bash
 npm run dev
 ```
 
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to explore **SkillSphere**.
+### 4. Visit the web app
+Open [http://localhost:3000](http://localhost:3000) on your local browser.
+live link : https://learn-skill-cyan.vercel.app/
