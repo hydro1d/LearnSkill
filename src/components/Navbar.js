@@ -1,5 +1,6 @@
 "use client";
 
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
@@ -7,11 +8,13 @@ import { BookOpen, LogOut, User, Menu, X, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
 
   const handleLogout = async () => {
     try {
@@ -23,11 +26,13 @@ export default function Navbar() {
     }
   };
 
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
     { name: "My Profile", href: "/profile" },
   ];
+
 
   const isActive = (href) => {
     if (href === "/") {
@@ -35,6 +40,7 @@ export default function Navbar() {
     }
     return pathname.startsWith(href);
   };
+
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-orange-500/10 shadow-sm transition-all duration-300">
@@ -52,6 +58,7 @@ export default function Navbar() {
             </Link>
           </div>
 
+
           {/* Desktop Nav Links */}
           <div className="hidden md:flex space-x-1 items-center">
             {navLinks.map((link) => (
@@ -68,6 +75,7 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
+
 
           {/* Right-side Auth Buttons (Desktop) */}
           <div className="hidden md:flex items-center space-x-4">
@@ -118,6 +126,7 @@ export default function Navbar() {
             )}
           </div>
 
+
           {/* Mobile Menu Button */}
           <div className="-mr-2 flex md:hidden">
             <button
@@ -133,6 +142,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
@@ -213,3 +223,5 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
