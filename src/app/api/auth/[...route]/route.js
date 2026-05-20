@@ -11,15 +11,7 @@ const handle = async (request) => {
     console.error("Auth handler error:", error);
     return new Response(
       JSON.stringify({
-        error: error.message || String(error),
-        stack: error.stack,
-        env: {
-          MONGODB_URI: process.env.MONGODB_URI ? "present" : "missing",
-          MONGODB_DB: process.env.MONGODB_DB ? "present" : "missing",
-          BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ? "present" : "missing",
-          BETTER_AUTH_URL: process.env.BETTER_AUTH_URL ? "present" : "missing",
-          NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ? "present" : "missing"
-        }
+        error: error.message || "Internal Server Error"
       }),
       {
         status: 500,
