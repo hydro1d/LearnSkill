@@ -1,42 +1,81 @@
 "use client";
 
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
 import coursesData from "@/data/courses.json";
-import { Search, Star, Clock, Filter, AlertCircle, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Star, Clock, BookOpen, ChevronRight, Play, ShieldAlert, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
 
-export default function AllCourses() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+export default function CourseDetails() {
+  const params = useParams();
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+  const [course, setCourse] = useState(null);
+  const [enrolled, setEnrolled] = useState(false);
 
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCourses(coursesData);
-      setLoading(false);
-    }, 550);
-    return () => clearTimeout(timer);
-  }, []);
+    const courseId = parseInt(params.id);
+    const foundCourse = coursesData.find((c) => c.id === courseId);
+    setCourse(foundCourse);
+  }, [params.id]);
 
 
-  const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || course.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  useEffect(() => {
+    if (!isPending && !session) {
+      toast.error("Please login to access course details!");
+      router.push(`/login?redirectTo=/courses/${params.id}`);
+    }
+  }, [session, isPending, router, params.id]);
 
 
-  const categories = ["All", "Development", "Design", "Marketing"];
+  if (isPending) {
+    return (
+      <div className="min-h-screen bg-[#fcfaf6] flex flex-col justify-center items-center">
+        <div className="w-12 h-12 rounded-full border-4 border-orange-500 border-t-transparent animate-spin"></div>
+        <p className="text-stone-500 mt-4 text-sm font-semibold">Validating session...</p>
+      </div>
+    );
+  }
 
 
-  const getCategoryCount = (category) => {
-    if (category === "All") return coursesData.length;
-    return coursesData.filter((c) => c.category === category).length;
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-[#fcfaf6] flex flex-col justify-center items-center px-4">
+        <div className="bg-white border border-stone-100 p-8 rounded-3xl text-center max-w-sm shadow-sm">
+          <ShieldAlert className="w-12 h-12 text-rose-500 mx-auto mb-4 animate-bounce" />
+          <h3 className="text-xl font-bold text-stone-900">Access Denied</h3>
+          <p className="text-stone-500 text-xs mt-2 leading-relaxed">
+            This module requires authentication. Redirecting to login...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-[#fcfaf6] flex flex-col justify-center items-center px-4">
+        <div className="bg-white border border-stone-100 p-8 rounded-3xl text-center max-w-sm shadow-sm">
+          <h3 className="text-xl font-bold text-stone-900">Course Not Found</h3>
+          <p className="text-stone-500 text-xs mt-2 mb-6">The requested course does not exist in our catalog.</p>
+          <Link href="/courses" className="btn btn-sm bg-orange-600 hover:bg-orange-500 border-none text-white rounded-xl font-bold">
+            Return to Courses
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+
+  const handleEnroll = () => {
+    setEnrolled(true);
+    toast.success(`Enrolled in: ${course.title}!`);
   };
 
 
@@ -45,184 +84,129 @@ export default function AllCourses() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
 
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="text-orange-600 text-xs font-bold uppercase tracking-widest">Browse Programs</span>
-          <h1 className="text-3xl md:text-5xl font-black text-stone-900 tracking-tight mt-2">
-            Explore Our <span className="gradient-text">Elite Curriculums</span>
-          </h1>
-          <p className="text-stone-500 mt-3 max-w-xl mx-auto text-sm md:text-base font-medium">
-            Search and filter expert-led courses across multiple modern digital disciplines.
-          </p>
-        </div>
+        <Link href="/courses" className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-orange-600 mb-8 transition-colors font-bold uppercase tracking-wider">
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to Catalog
+        </Link>
 
 
-        {/* Filters and Search Bar Container */}
-        <div className="bg-white border border-stone-100 p-5 rounded-2xl mb-10 flex flex-col md:flex-row items-center justify-between gap-5 shadow-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
 
-          {/* Search Box */}
-          <div className="relative w-full md:max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
-              <Search className="h-4 w-4" />
+          {/* Main Info */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="space-y-4">
+              <span className="badge bg-orange-100 text-orange-700 border border-orange-200 py-2 px-3.5 text-xs font-bold rounded-lg">
+                {course.category}
+              </span>
+              <h1 className="text-3xl md:text-5xl font-black text-stone-900 leading-tight">{course.title}</h1>
+              <p className="text-stone-600 text-base leading-relaxed font-medium">{course.description}</p>
             </div>
-            <input
-              type="text"
-              placeholder="Search courses by title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input input-bordered w-full pl-10 bg-stone-50 border-stone-200 text-stone-900 rounded-xl focus:border-orange-500 focus:outline-none transition-all placeholder:text-stone-400 text-sm"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-orange-600"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
 
 
-          {/* Category Filter Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
-            <span className="text-stone-400 text-xs font-bold mr-1 hidden md:flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5" /> Filter:
-            </span>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-1.5 ${
-                  selectedCategory === category
-                    ? "bg-orange-600 text-white shadow-md shadow-orange-600/10"
-                    : "bg-stone-50 text-stone-600 border border-stone-200 hover:text-orange-600 hover:border-orange-300 hover:bg-orange-50"
-                }`}
-              >
-                {category}
-                <span className={`badge badge-sm py-0 px-1.5 rounded-md border-none font-bold text-[10px] ${
-                  selectedCategory === category
-                    ? "bg-white/20 text-white"
-                    : "bg-stone-200 text-stone-600"
-                }`}>
-                  {getCategoryCount(category)}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {[
+                { label: "Instructor", value: course.instructor, plain: true },
+                { label: "Rating", value: `${course.rating.toFixed(1)} / 5.0`, star: true },
+                { label: "Duration", value: course.duration, clock: true },
+                { label: "Difficulty", value: course.level, orange: true },
+              ].map((item) => (
+                <div key={item.label} className="bg-white border border-stone-100 p-4 rounded-2xl shadow-sm">
+                  <span className="text-stone-400 text-[10px] uppercase font-bold tracking-wider">{item.label}</span>
+                  {item.star ? (
+                    <div className="flex items-center text-amber-500 gap-1 mt-1 text-sm font-bold">
+                      <Star className="w-4 h-4 fill-amber-500" /><span>{item.value}</span>
+                    </div>
+                  ) : item.clock ? (
+                    <div className="flex items-center text-stone-900 gap-1 mt-1 text-sm font-bold">
+                      <Clock className="w-4 h-4 text-orange-500" /><span>{item.value}</span>
+                    </div>
+                  ) : (
+                    <p className={`text-sm font-bold mt-1 ${item.orange ? "text-orange-600 uppercase tracking-wide" : "text-stone-900"}`}>{item.value}</p>
+                  )}
+                </div>
+              ))}
+            </div>
 
 
-        {/* Course Cards Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, idx) => (
-              <div key={idx} className="bg-white border border-stone-100 rounded-2xl overflow-hidden flex flex-col h-full animate-pulse shadow-sm">
-                <div className="h-48 w-full bg-stone-100" />
-                <div className="p-6 flex-grow flex flex-col space-y-4">
-                  <div className="h-3 bg-stone-100 rounded-md w-1/4" />
-                  <div className="h-5 bg-stone-100 rounded-md w-3/4" />
-                  <div className="h-14 bg-stone-100 rounded-md w-full" />
-                  <div className="flex justify-between items-center border-t border-stone-50 pt-4">
-                    <div className="h-4 bg-stone-100 rounded-md w-1/5" />
-                    <div className="h-4 bg-stone-100 rounded-md w-1/5" />
+            {/* Curriculum */}
+            <div className="bg-white border border-stone-100 p-6 md:p-8 rounded-3xl space-y-6 shadow-sm">
+              <div>
+                <h2 className="text-xl font-bold text-stone-900 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-orange-500" /> Course Curriculum
+                </h2>
+                <p className="text-stone-400 text-xs mt-1">A step-by-step master plan designed for this program.</p>
+              </div>
+              <div className="space-y-3">
+                {course.curriculum && course.curriculum.map((topic, index) => (
+                  <div key={index} className="flex items-start gap-4 p-4 bg-stone-50 hover:bg-orange-50/50 border border-stone-100 hover:border-orange-200/50 rounded-2xl transition-all group cursor-pointer">
+                    <div className="bg-orange-100 group-hover:bg-orange-200/70 text-orange-700 p-2.5 rounded-xl text-xs font-black min-w-[36px] text-center">
+                      {String(index + 1).padStart(2, '0')}
+                    </div>
+                    <div className="flex-grow">
+                      <h4 className="text-sm font-bold text-stone-800 group-hover:text-stone-950 transition-colors">{topic}</h4>
+                      <p className="text-stone-400 text-xs mt-0.5">Estimated 3–4 hours of video lessons & labs</p>
+                    </div>
+                    <Play className="w-4 h-4 text-stone-400 group-hover:text-orange-500 transition-colors flex-shrink-0 mt-0.5" />
                   </div>
-                  <div className="h-9 bg-stone-100 rounded-md w-full mt-4" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+
+          {/* Enroll Card */}
+          <div className="bg-white border border-stone-100 p-6 rounded-3xl sticky top-24 shadow-sm">
+            <figure className="relative h-44 w-full rounded-2xl overflow-hidden mb-6">
+              <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-stone-950/30 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-white/90 hover:bg-white flex items-center justify-center cursor-pointer shadow-lg transition-all hover:scale-105">
+                  <Play className="w-5 h-5 fill-stone-900 ml-0.5" />
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <AnimatePresence mode="popLayout">
-            {filteredCourses.length > 0 ? (
-              <motion.div layout className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {filteredCourses.map((course) => (
-                  <motion.div
-                    layout
-                    key={course.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
-                    className="card bg-white border border-stone-100 rounded-2xl overflow-hidden glass-panel-hover flex flex-col h-full shadow-sm hover:shadow-md"
-                  >
-                    <figure className="relative h-48 w-full overflow-hidden">
-                      <img
-                        src={course.image}
-                        alt={course.title}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                      <div className="absolute top-3 right-3 badge bg-orange-600/90 text-white border-none py-2 px-3 text-xs font-bold rounded-lg shadow-sm">
-                        {course.category}
-                      </div>
-                    </figure>
+            </figure>
 
 
-                    <div className="card-body p-6 flex flex-col flex-grow">
-                      <h2 className="card-title text-lg font-bold text-stone-900 leading-snug hover:text-orange-600 transition-colors">
-                        {course.title}
-                      </h2>
-                      <p className="text-stone-500 text-xs mt-1">
-                        By <span className="text-stone-800 font-bold">{course.instructor}</span>
-                      </p>
+            <div className="space-y-2 mb-6">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-stone-900">Free Access</span>
+                <span className="text-stone-400 line-through text-sm font-medium">$199.99</span>
+              </div>
+              <p className="text-stone-500 text-xs leading-relaxed">Sponsored by SkillSphere Global Access initiative.</p>
+            </div>
 
 
-                      <p className="text-stone-600 text-sm mt-3 line-clamp-2 flex-grow leading-relaxed">
-                        {course.description}
-                      </p>
-
-
-                      <div className="flex items-center justify-between border-t border-stone-100 pt-4 mt-4">
-                        <div className="flex items-center text-amber-500 gap-1 text-sm font-bold">
-                          <Star className="w-4 h-4 fill-amber-500" />
-                          <span>{course.rating.toFixed(1)}</span>
-                        </div>
-                        <div className="flex items-center text-stone-500 gap-1 text-xs font-medium">
-                          <Clock className="w-3.5 h-3.5" />
-                          <span>{course.duration}</span>
-                        </div>
-                        <div className="badge badge-outline border-stone-200 text-stone-600 text-xs py-2 px-2.5 rounded-lg font-bold">
-                          {course.level}
-                        </div>
-                      </div>
-
-
-                      <div className="card-actions mt-6">
-                        <Link
-                          href={`/courses/${course.id}`}
-                          className="w-full btn btn-primary btn-sm bg-orange-600 hover:bg-orange-500 border-none text-white rounded-xl shadow-md shadow-orange-600/10 font-bold"
-                        >
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center py-20 bg-white border border-stone-100 rounded-3xl max-w-md mx-auto shadow-sm"
-              >
-                <AlertCircle className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-                <h3 className="text-lg font-bold text-stone-900">No courses found</h3>
-                <p className="text-stone-500 text-xs mt-2 px-6 leading-relaxed">
-                  We couldn't find any courses matching "{searchQuery}" in category "{selectedCategory}". Try adjusting your filters.
-                </p>
-                <button
-                  onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
-                  className="btn btn-xs btn-outline border-orange-300 hover:bg-orange-50 text-orange-700 rounded-lg mt-6 font-bold"
-                >
-                  Reset all filters
+            <div className="space-y-3">
+              {enrolled ? (
+                <button disabled className="w-full btn btn-disabled bg-emerald-50 text-emerald-700 border border-emerald-200 py-3 rounded-2xl font-bold">
+                  ✓ Already Enrolled & Active
                 </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        )}
+              ) : (
+                <button onClick={handleEnroll} className="w-full btn bg-orange-600 hover:bg-orange-500 border-none text-white py-3 rounded-2xl font-bold shadow-lg shadow-orange-600/10">
+                  Enroll Now
+                </button>
+              )}
+              <div className="text-[10px] text-stone-400 text-center uppercase tracking-wider font-bold">
+                Lifetime Access · Certificate of Completion
+              </div>
+            </div>
 
 
+            <div className="border-t border-stone-100 pt-5 mt-5 space-y-2.5 text-xs">
+              <span className="font-bold text-stone-900 block mb-2">This course includes:</span>
+              {["Full HD On-demand video resources", "12 downloadable curriculum articles", "Interactive coding/design challenges", "Professional Verified Certificate"].map((item) => (
+                <div key={item} className="flex items-center gap-2 text-stone-600 font-medium">
+                  <ChevronRight className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />{item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+
+        </div>
       </div>
     </div>
   );
 }
+
+
