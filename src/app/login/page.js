@@ -35,9 +35,8 @@ function LoginForm() {
   const handleGoogleLogin = async () => {
     setSocialLoading(true);
     try {
-      const { data, error } = await authClient.signIn.social({ provider: "google" });
+      const { data, error } = await authClient.signIn.social({ provider: "google", callbackURL: redirectTo });
       if (error) toast.error(error.message);
-      else { toast.success("Authenticated with Google!"); router.push(redirectTo); }
     } catch { toast.error("Google authentication failed."); }
     finally { setSocialLoading(false); }
   };
