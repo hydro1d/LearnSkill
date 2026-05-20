@@ -62,7 +62,7 @@ const listeners = new Set();
 
 const checkMockAuth = async () => {
   if (typeof window === "undefined") return false;
-  
+
   if (window.__USE_MOCK_AUTH__ !== undefined) {
     return window.__USE_MOCK_AUTH__;
   }
@@ -76,14 +76,14 @@ const checkMockAuth = async () => {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1500);
-    
+
     const response = await fetch("/api/auth/get-session", {
       method: "GET",
       signal: controller.signal
     });
-    
+
     clearTimeout(timeoutId);
-    
+
     const useMock = response.status === 500;
     window.__USE_MOCK_AUTH__ = useMock;
     sessionStorage.setItem("skillsphere_use_mock_auth", String(useMock));
