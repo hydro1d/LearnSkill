@@ -12,7 +12,9 @@ const getMongoClient = async () => {
   if (!globalThis.__BETTER_AUTH_MONGO_CLIENT__) {
     globalThis.__BETTER_AUTH_MONGO_CLIENT__ = new MongoClient(MONGODB_URI, {
       appName: "BetterAuthMongo",
-      maxPoolSize: 10
+      maxPoolSize: 10,
+      connectTimeoutMS: 2000,
+      serverSelectionTimeoutMS: 2000
     });
     globalThis.__BETTER_AUTH_MONGO_CLIENT_PROMISE__ = globalThis.__BETTER_AUTH_MONGO_CLIENT__.connect();
   }
