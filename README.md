@@ -77,9 +77,5 @@ Create `.env.local` as described in the section above.
 npm run dev
 ```
 
-### 5. Build for production compilation
-```bash
-npm run build
-```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to explore **SkillSphere**.
