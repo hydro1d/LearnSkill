@@ -1,4 +1,4 @@
-# 🎓 SkillSphere — Premium Online Learning & Skill Acquisition Platform
+#  SkillSphere — Premium Online Learning & Skill Acquisition Platform
 
 SkillSphere is a next-generation, high-fidelity LMS (Learning Management System) platform built with **Next.js 16 (App Router)** and **React 19**. It features a modern, warm, and natural light design system styled with **Tailwind CSS v4** and **DaisyUI v5**. 
 
@@ -6,7 +6,7 @@ The platform connects to a **MongoDB** database via the official **BetterAuth Mo
 
 ---
 
-## 🎨 Design & Aesthetic System
+##  Design & Aesthetic System
 The user interface has been customized with premium visual aesthetics tailored for a warm, natural, and engaging study environment:
 *   **Warm Palette**: Accents of rich orange (`#ea580c`) and warm amber (`#f97316`) against a clean off-white canvas (`#fcfaf6`).
 *   **Typography**: Clean font pairings featuring **Outfit** and **Inter** for exceptional readability.
@@ -16,7 +16,7 @@ The user interface has been customized with premium visual aesthetics tailored f
 
 ---
 
-## ⚡ Tech Stack & Libraries
+##  Tech Stack & Libraries
 
 | Dependency | Version | Purpose / Feature |
 | :--- | :--- | :--- |
@@ -29,26 +29,6 @@ The user interface has been customized with premium visual aesthetics tailored f
 | **Framer Motion** | `^12.39.0` | Micro-interactions and smooth page transitions |
 | **Lucide React** | `^1.16.0` | Clean outline SVG icons |
 | **React Hot Toast** | `^2.6.0` | Smooth popup notification alerts |
-
----
-
-## 🏗️ Hybrid Authentication Architecture
-
-SkillSphere features a robust, hybrid client-server auth architecture that ensures the application remains fully functional regardless of the environment setup:
-
-```mermaid
-graph TD
-    A[Client authClient Call] --> B{Check Auth Source}
-    B -- /api/auth/get-session succeeds --> C[MongoDB Mode]
-    B -- /api/auth/get-session fails/times out --> D[Mock LocalStorage Mode]
-    C --> E[Reads/Writes to MongoDB via better-auth]
-    D --> F[Reads/Writes to localStorage Registry]
-```
-
-1.  **MongoDB Server Mode**:
-    When configured with a valid `MONGODB_URI`, the server-side API endpoints in `/api/auth/[...route]` spin up a BetterAuth instance connected via the `@better-auth/mongo-adapter` to persist accounts, users, and sessions directly in your database.
-2.  **Client-Side Fail-safe Mock Mode**:
-    If the database server is not configured, or if the API gateway encounters a connection error, the client-side `authClient` automatically falls back to a mock auth engine backed by `localStorage` (with a simulated 200-500ms API latency). This guarantees that preview, testing, and Vercel branch deployments remain fully browseable and functional.
 
 ---
 
