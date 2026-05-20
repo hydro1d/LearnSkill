@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 
@@ -97,7 +97,9 @@ export const authClient = {
 
   signOut: async () => {
     const { error } = await request("/api/auth/sign-out", {
-      method: "POST"
+      method: "POST",
+      headers: jsonHeaders,
+      body: JSON.stringify({})
     });
     return { error };
   },

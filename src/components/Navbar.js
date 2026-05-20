@@ -18,9 +18,13 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await authClient.signOut();
+      const { error } = await authClient.signOut();
+      if (error) {
+        toast.error(error.message || "Logout failed. Please try again.");
+        return;
+      }
       toast.success("Successfully logged out!");
-      router.push("/");
+      window.location.href = "/";
     } catch (err) {
       toast.error("Logout failed. Please try again.");
     }
